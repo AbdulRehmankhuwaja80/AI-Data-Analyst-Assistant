@@ -1,0 +1,38 @@
+# ── Core backend ─────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy>=2.0.0
+pymysql>=1.1.0
+cryptography>=42.0.0          # PyMySQL SSL support
+
+# ── AI / LLM ─────────────────────────────────────────────────────────────────
+langchain==0.2.17
+langchain-community==0.2.19
+ollama>=0.2.0
+
+# ── Data processing ───────────────────────────────────────────────────────────
+pandas>=2.2.0,<3.0
+numpy>=1.26.0,<2.0
+openpyxl>=3.1.0               # Excel support
+pandasql>=0.7.3               # SQL on DataFrames
+
+# ── Visualization ─────────────────────────────────────────────────────────────
+plotly>=5.22.0
+kaleido>=0.2.1                # Plotly → static image export for PDF
+
+# ── Vector store ─────────────────────────────────────────────────────────────
+chromadb>=0.5.0
+
+# ── PDF report generation ─────────────────────────────────────────────────────
+reportlab>=4.2.0
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+streamlit>=1.35.0
+requests>=2.32.0
+
+# ── Dev / testing ─────────────────────────────────────────────────────────────
+pytest>=8.0.0
+httpx>=0.27.0                 # FastAPI test client

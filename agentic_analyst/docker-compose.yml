@@ -1,0 +1,66 @@
+services:
+
+  mysql:
+    image: mysql:8.3
+    container_name: analyst_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: SOM_72743927
+      MYSQL_DATABASE: analyst_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pSOM_72743927"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: analyst_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Pull the model on first start:
+    # docker exec analyst_ollama ollama pull llama3
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: analyst_backend
+    environment:
+      DATABASE_URL: mysql+pymysql://root:SOM_72743927@mysql:3306/analyst_db
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: llama3
+      UPLOAD_DIR: /app/uploads
+      REPORTS_DIR: /app/reports
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./uploads:/app/uploads
+      - ./reports:/app/reports
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: analyst_frontend
+    environment:
+      API_BASE: http://backend:8000
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  ollama_data:
